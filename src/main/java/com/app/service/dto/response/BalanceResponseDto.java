@@ -1,11 +1,11 @@
-package com.app.service.dto;
+package com.app.service.dto.response;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class BalanceDto {
+public class BalanceResponseDto {
     private List<Available> available;
 
     public record Available() {

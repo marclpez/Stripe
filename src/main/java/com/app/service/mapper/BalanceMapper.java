@@ -1,6 +1,6 @@
 package com.app.service.mapper;
 
-import com.app.service.dto.BalanceDto;
+import com.app.service.dto.response.BalanceResponseDto;
 import com.stripe.model.Balance;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -12,9 +12,9 @@ public interface BalanceMapper {
 
     BalanceMapper INSTANCE = Mappers.getMapper(BalanceMapper.class);
 
-    BalanceDto map(Balance stripeBalance);
+    BalanceResponseDto map(Balance stripeBalance);
 
-    List<BalanceDto.Available> mapAvailable(List<Balance.Available> availableList);
+    List<BalanceResponseDto.Available> mapAvailable(List<Balance.Available> availableList);
 
-    BalanceDto.Available mapSingleAvailable(Balance.Available available);
+    BalanceResponseDto.Available mapSingleAvailable(Balance.Available available);
 }
