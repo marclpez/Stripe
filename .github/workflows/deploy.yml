@@ -1,0 +1,33 @@
+name: Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev  # 👈 Usa el entorno que creaste en GitHub
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build app
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: mvn clean package -DskipTests
+
+      - name: Run app
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          nohup java -jar target/*.jar &
+          sleep 10
+          curl http://localhost:8080/actuator/health
