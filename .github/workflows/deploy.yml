@@ -13,21 +13,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      - name: Build app
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
-        run: mvn clean package -DskipTests
-
-      - name: Run app
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
+      - name: Build Docker image
         run: |
-          nohup java -jar target/*.jar &
-          sleep 10
-          curl http://localhost:8080/actuator/health
+          docker build -t stripe-app .
+
+      - name: Run Docker container
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
+        run: |
+          docker run -d --name stripe-container \
+            -e DB_PASSWORD=$DB_PASSWORD \
+            -e SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
+            -p 8080:8080 stripe-app
+
+      - name: Wait for app to start
+        run: |
+          echo "Esperando que la app arranque..."
+          sleep 15
+
+      - name: Health check
+        run: |
+          curl --fail http://localhost:8080/actuator/health
