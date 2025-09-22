@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM maven:3.9.3-jdk-21 AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
   
   # Copy pom.xml and dependencies for cache
@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
   
   # Stage 2: Run
-FROM maven:3.9.3-jdk-21
+FROM eclipse-temurin:21-jre
 WORKDIR /app
   
   # Copy JAR 
