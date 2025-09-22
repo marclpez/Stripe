@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: dev  # 👈 Usa el entorno que creaste en GitHub
+    environment: dev
 
     steps:
       - name: Checkout repository
@@ -18,13 +18,8 @@ jobs:
           docker build -t stripe-app .
 
       - name: Run Docker container
-        env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
         run: |
           docker run -d --name stripe-container \
-            -e DB_PASSWORD=$DB_PASSWORD \
-            -e SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
             -p 8080:8080 stripe-app
 
       - name: Wait for app to start
